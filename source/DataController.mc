@@ -7,7 +7,7 @@ class DataController extends Ble.BleDelegate {
     private var _service;
     private var _ready = false;
     private var _doseRate = 0.0;
-    private var _temperature;
+    private var _temperature = 0.0;
     private var _doseStart = -1;
     private var _doseAccumulated = 0.0;
 

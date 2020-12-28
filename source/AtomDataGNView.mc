@@ -28,7 +28,7 @@ class AtomDataGNView extends WatchUi.SimpleDataField {
 
             self._fitContibution.update({
                 :doseRate => d,
-                :temperature => 0.0,
+                :temperature => self._app.getTemperature(),
                 :sessionDoze => self._app.getSessionDoseAccumulated()
             });
         }

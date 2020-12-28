@@ -52,6 +52,10 @@ class AtomDataGNApp extends Application.AppBase {
         return self._dataController.getSessionDoseAccumulated();
     }
 
+    function getTemperature() {
+        return self._dataController.getTemperature();
+    }
+
     function getProfile() {
         return self._atomProfile;
     }
