@@ -48,6 +48,10 @@ class AtomDataGNApp extends Application.AppBase {
         return self._savedDevice;
     }
 
+    function getSessionDoseAccumulated() {
+        return self._dataController.getSessionDoseAccumulated();
+    }
+
     function getProfile() {
         return self._atomProfile;
     }

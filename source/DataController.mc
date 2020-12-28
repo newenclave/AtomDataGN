@@ -7,6 +7,9 @@ class DataController extends Ble.BleDelegate {
     private var _service;
     private var _ready = false;
     private var _doseRate = 0.0;
+    private var _temperature;
+    private var _doseStart = -1;
+    private var _doseAccumulated = 0.0;
 
     function initialize(app) {
         BleDelegate.initialize();
@@ -26,6 +29,21 @@ class DataController extends Ble.BleDelegate {
 
     function getDoseRate() {
         return self._doseRate;
+    }
+
+    function getDoseAccumulated() {
+        return self._doseAccumulated;
+    }
+
+    function getSessionDoseAccumulated() {
+        if(self._doseStart < 0) {
+            return 0.0;
+        }
+        return self._doseAccumulated - self._doseStart;
+    }
+
+    function getTemperature() {
+        return self._temperature;
     }
 
     function isReady() {
@@ -72,8 +90,14 @@ class DataController extends Ble.BleDelegate {
 
     function onCharacteristicChanged(char, value) {
         if(value.size() >= 13) {
+            self._doseAccumulated = value.decodeNumber(Lang.NUMBER_FORMAT_FLOAT,
+                    { :offset => 1, :endianness => Lang.ENDIAN_LITTLE });
             self._doseRate = value.decodeNumber(Lang.NUMBER_FORMAT_FLOAT,
                     { :offset => 5, :endianness => Lang.ENDIAN_LITTLE });
+            self._temperature = value[12];
+            if(self._doseStart < 0) {
+                self._doseStart = self._doseAccumulated;
+            }
         }
     }
 }
