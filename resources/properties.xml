@@ -2,6 +2,7 @@
     <properties>
         <property id="device_mac" type="string"></property>
         <property id="use_roentgens" type="boolean">false</property>
+        <property id="max_connect_time" type="number">60</property>
     </properties>
 
 	<settings>
@@ -12,6 +13,10 @@
 		
 		<setting propertyKey="@Properties.use_roentgens" title="@Strings.use_roentgens">
 		    <settingConfig type="boolean" readonly="false" />
+		</setting>
+
+		<setting propertyKey="@Properties.max_connect_time" title="@Strings.maximum_time_to_connect">
+		    <settingConfig type="numeric" min="0" max="999999" readonly="false" />
 		</setting>
 
 	</settings>

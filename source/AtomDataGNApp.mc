@@ -8,6 +8,7 @@ class AtomDataGNApp extends Application.AppBase {
     enum {
         STATUS_COLD,
         STATUS_SCAN,
+        STATUS_PAIRING,
         STATUS_PAIRED,
     }
 
@@ -15,10 +16,13 @@ class AtomDataGNApp extends Application.AppBase {
     private var _deviceAddress;
     private var _useRoentgens;
     private var _savedDevice;
+    private var _scanTo;
     private var _currentStatus;
 
     private var _scanController;
     private var _dataController;
+
+    private var _statusTime;
 
     function initialize() {
         AppBase.initialize();
@@ -27,9 +31,9 @@ class AtomDataGNApp extends Application.AppBase {
 
         self.loadDevice();
 
-        System.println("Init!");
         Ble.registerProfile(self._atomProfile.getProfile());
         self._currentStatus = STATUS_COLD;
+        self._statusTime = 0;
     }
 
     function isReady() {
@@ -62,12 +66,12 @@ class AtomDataGNApp extends Application.AppBase {
 
     function onStart(state) {
         if(null != self._savedDevice) {
-            if(!self._deviceAddress.equals("") && !self._savedDevice.hasAddress(self._deviceAddress)) {
+            if(!self._deviceAddress.equals("") && (self.checkAddress(self._savedDevice, self._deviceAddress) != 1)) {
                 self._savedDevice = null;
                 self.cleanDevice();
             } else {
                 System.println("Connect to!");
-                self.connectTo(self._savedDevice);
+                self.connectTo(self._savedDevice, STATUS_SCAN);
                 return;
             }
         }
@@ -82,12 +86,13 @@ class AtomDataGNApp extends Application.AppBase {
     }
 
     function onSettingsChanged() {
+        self._useRoentgens = Application.Properties.getValue("use_roentgens");
+        self._scanTo = Application.Properties.getValue("max_connect_time");
         var newDevAddr = Application.Properties.getValue("device_mac");
         if(newDevAddr != self._deviceAddress) {
             self._deviceAddress = newDevAddr;
             self.reconnectNew();
         }
-        self._useRoentgens = Application.Properties.getValue("use_roentgens");
     }
 
     function loadDevice() {
@@ -105,6 +110,16 @@ class AtomDataGNApp extends Application.AppBase {
     function loadSettings() {
         self._deviceAddress = Application.Properties.getValue("device_mac");
         self._useRoentgens = Application.Properties.getValue("use_roentgens");
+        self._scanTo = Application.Properties.getValue("max_connect_time");
+    }
+
+    function checkAddress(scanResult, addr) {
+        try {
+            return scanResult.hasAddress(addr) ? 1 : 0;
+        } catch(e) {
+            System.println(e.getErrorMessage());
+        }
+        return -1;
     }
 
     function reconnectNew() {
@@ -121,29 +136,56 @@ class AtomDataGNApp extends Application.AppBase {
 
     function reconnectCold() {
         self.reconnectScan();
+        self.setCurrentStatus(STATUS_SCAN);
         Ble.setScanState(Ble.SCAN_STATE_SCANNING);
     }
 
     function reconnectScan() {
-        self._scanController = new ScanController(self, self._deviceAddress);
+        self._scanController = new ScanController(self._deviceAddress);
         Ble.setDelegate(self._scanController);
+    }
+
+    function onCompute() {
+        if((self._scanTo > 0) && (self._currentStatus == STATUS_SCAN)) {
+            if((System.getTimer() - self._statusTime) > (self._scanTo * 1000)) {
+                if(self._dataController) {
+                    self._dataController.stop();
+                }
+                if(self._scanController) {
+                    Ble.setScanState(Ble.SCAN_STATE_OFF);
+                }
+                self._dataController = null;
+                self._scanController = null;
+                self.setCurrentStatus(STATUS_COLD);
+                System.println("Bla!");
+            }
+        }
     }
 
     function reconnectPair() {
 
     }
 
-    function connectTo(scanResult) {
+    function connectTo(scanResult, status) {
         self._savedDevice = scanResult;
-        self._dataController = new DataController(self);
+        self._dataController = new DataController();
         Ble.setDelegate(self._dataController);
         Ble.setScanState(Ble.SCAN_STATE_OFF);
-        self._currentStatus = STATUS_PAIRED;
+        self.setCurrentStatus(status);
         self.saveDevice();
     }
 
+    function setCurrentStatus(status) {
+        self._currentStatus = status;
+        self._statusTime = System.getTimer();
+    }
+
+    function onConnectChanged(val) {
+        self.setCurrentStatus(val ? STATUS_PAIRING : STATUS_PAIRING);
+    }
+
     function getInitialView() {
-        return [ new AtomDataGNView(self) ];
+        return [ new AtomDataGNView() ];
     }
 }
 

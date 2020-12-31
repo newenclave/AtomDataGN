@@ -1,8 +1,9 @@
 <strings>
     <string id="AppName">AtomDataGN</string>
+    
     <string id="label_device_mac">Device MAC</string>
     <string id="use_roentgens">Use R</string>
-    <string id="label_dose_rate">Doze rate</string>
+    <string id="label_dose_rate">Dose rate</string>
     
     <string id="text_micro_sieverts_hours">µSv/h</string>
     <string id="text_micro_roentgen_hours">µR/h</string>
@@ -11,5 +12,7 @@
         
     <string id="text_temp_celsius">°C</string>
     <string id="text_micro_fahrenheit">°F</string>
-                
+
+    <string id="maximum_time_to_connect">Maximum time to search</string>
+
 </strings>

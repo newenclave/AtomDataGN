@@ -1,26 +1,36 @@
 using Toybox.WatchUi;
 using Toybox.FitContributor as Fit;
+using Toybox.Application as App;
 
 class AtomDataGNView extends WatchUi.SimpleDataField {
 
-    private var _app;
     private var _fitContibution;
+    private var _doseRate;
+    private var _temperature;
+    private var _useR;
 
-    function initialize(app) {
+    function initialize() {
         SimpleDataField.initialize();
-        label = Application.loadResource(Rez.Strings.label_dose_rate);
-        self._app = app;
         self._fitContibution = new AtomFitContribution(self);
+        self._doseRate = 0.0;
+        self._useR = false;
+        label = App.loadResource(Rez.Strings.label_dose_rate);
     }
 
-    function compute(info) {
-        var result = "--.--";
+//    function onLayout(dc) {
+//        View.setLayout(Rez.Layouts.MainLayout(dc));
+//        View.findDrawableById("label").setText(Rez.Strings.label_dose_rate);
+//        return true;
+//    }
 
-        var r = self._app.isRoentgen();
-        var ready = self._app.isReady();
+    function compute(info) {
+        App.getApp().onCompute();
+        var result = "--.--";
+        self._useR = App.getApp().isRoentgen();
+        var ready = App.getApp().isReady();
         if(ready) {
-            var d = self._app.getDoseRate();
-            if(r) {
+            var d = App.getApp().getDoseRate();
+            if(self._useR) {
                 result = (d * 100.0).format("%.2f");
             } else {
                 result = (d).format("%.2f");
@@ -28,13 +38,33 @@ class AtomDataGNView extends WatchUi.SimpleDataField {
 
             self._fitContibution.update({
                 :doseRate => d,
-                :temperature => self._app.getTemperature(),
-                :sessionDoze => self._app.getSessionDoseAccumulated()
+                :temperature => App.getApp().getTemperature(),
+                :sessionDoze => App.getApp().getSessionDoseAccumulated()
             });
+            self._doseRate = d;
         }
-        result = Lang.format("$1$ $2$", [result,
-            (r ? Application.loadResource(Rez.Strings.text_micro_roentgen_hours)
-               : Application.loadResource(Rez.Strings.text_micro_sieverts_hours))]);
         return result;
     }
+
+//    function onUpdate(dc) {
+//        var label = App.loadResource(Rez.Strings.label_dose_rate);
+//
+//        // Set the background color
+//        View.findDrawableById("Background").setColor(getBackgroundColor());
+//
+//        // Set the foreground color and value
+//        var value = View.findDrawableById("value");
+//        if (getBackgroundColor() == Graphics.COLOR_BLACK) {
+//            value.setColor(Graphics.COLOR_WHITE);
+//        } else {
+//            value.setColor(Graphics.COLOR_BLACK);
+//        }
+//        value.setText(self._doseRate.format("%.2f"));
+//        label = Lang.format("$1$ ($2$)", [label,
+//            (self._useR ? App.loadResource(Rez.Strings.text_micro_roentgen_hours)
+//               : App.loadResource(Rez.Strings.text_micro_sieverts_hours))]);
+//
+//        // Call parent's onUpdate(dc) to redraw the layout
+//        View.onUpdate(dc);
+//    }
 }

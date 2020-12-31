@@ -1,8 +1,8 @@
 using Toybox.BluetoothLowEnergy as Ble;
+using Toybox.Application as App;
 
 class DataController extends Ble.BleDelegate {
 
-    private var _app;
     private var _device;
     private var _service;
     private var _ready = false;
@@ -11,14 +11,13 @@ class DataController extends Ble.BleDelegate {
     private var _doseStart = -1;
     private var _doseAccumulated = 0.0;
 
-    function initialize(app) {
+    function initialize() {
         BleDelegate.initialize();
-        self._app = app;
         self.start();
     }
 
     function start() {
-        self._device = Ble.pairDevice(self._app.getScanResult());
+        self._device = Ble.pairDevice(App.getApp().getScanResult());
     }
 
     function stop() {
@@ -51,7 +50,7 @@ class DataController extends Ble.BleDelegate {
     }
 
     function startNotification() {
-        var char = self._service.getCharacteristic(self._app.getProfile().ATOM_FAST_CHAR);
+        var char = self._service.getCharacteristic(App.getApp().getProfile().ATOM_FAST_CHAR);
         if(char) {
             var cccd = char.getDescriptor(Ble.cccdUuid());
             cccd.requestWrite([0x01, 0x00]b);
@@ -63,12 +62,14 @@ class DataController extends Ble.BleDelegate {
             return;
         }
         if(!self._device.isConnected()) {
+            App.getApp().onConnectChanged(false);
             return;
         }
-        self._service = self._device.getService(self._app.getProfile().ATOM_FAST_SERVICE);
+        self._service = self._device.getService(App.getApp().getProfile().ATOM_FAST_SERVICE);
         if(self._service) {
             System.println("startNotification");
             self.startNotification();
+            App.getApp().onConnectChanged(true);
         }
     }
 
@@ -80,12 +81,12 @@ class DataController extends Ble.BleDelegate {
 
     // Write request
     function onCharacteristicWrite(characteristic, status) {
-        System.println("Write " + characteristic.toString() + " " + status.toString());
+        //System.println("Write " + characteristic.toString() + " " + status.toString());
     }
 
     // read request
     function onCharacteristicRead(characteristic, status, value) {
-        System.println("onCharacteristicRead " + characteristic.toString() + " " + status.toString());
+        //System.println("onCharacteristicRead " + characteristic.toString() + " " + status.toString());
     }
 
     function onCharacteristicChanged(char, value) {
