@@ -1,5 +1,6 @@
 <strings>
     <string id="AppName">AtomDataGN</string>
+    <string id="AppNameBeta">AtomDataGNBeta</string>
     
     <string id="label_device_mac">Device MAC</string>
     <string id="use_roentgens">Use R</string>
@@ -9,6 +10,7 @@
     <string id="text_micro_roentgen_hours">µR/h</string>
 
     <string id="text_milli_sieverts">mSv</string>
+    <string id="text_milli_roentgen">mR</string>
         
     <string id="text_temp_celsius">°C</string>
     <string id="text_micro_fahrenheit">°F</string>

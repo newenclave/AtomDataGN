@@ -2,6 +2,7 @@
 
     <string id="field_dose_power_graph_label">Dose rate</string>
     <string id="field_dose_power_label">Microseiverts</string>
+    <string id="field_dose_power_label_r">Microrontgen</string>
 
     <string id="field_temp_graph_label">Atom Fast temperature</string>
     <string id="field_temp_label">Degrees Celsius</string>

@@ -8,6 +8,7 @@
 			dataLabel="@Strings.field_dose_power_label"
 			unitLabel="@Strings.text_micro_sieverts_hours" 
 			fillColor="#58cf39" />
+			
 	<fitField id="1" 
 			displayInChart="true"
 			sortOrder="1" 
@@ -16,9 +17,26 @@
 			dataLabel="@Strings.field_temp_label"
 			unitLabel="@Strings.text_temp_celsius" 
 			fillColor="#3bb2e2" />
+			
 	<fitField id="2" 
 			sortOrder="1" 
 			precision="6"
 			dataLabel="@Strings.field_session_dose_label"
 			unitLabel="@Strings.text_milli_sieverts" />
+
+	<fitField id="3" 
+			displayInChart="true" 
+			sortOrder="0" 
+			precision="2"
+			chartTitle="@Strings.field_dose_power_graph_label" 
+			dataLabel="@Strings.field_dose_power_label_r"
+			unitLabel="@Strings.text_micro_roentgen_hours" 
+			fillColor="#58cf39" />
+
+	<fitField id="4" 
+			sortOrder="1" 
+			precision="4"
+			dataLabel="@Strings.field_session_dose_label"
+			unitLabel="@Strings.text_milli_roentgen" />
+			
 </fitContributions>
