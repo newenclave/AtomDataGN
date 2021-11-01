@@ -38,5 +38,12 @@
 			precision="4"
 			dataLabel="@Strings.field_session_dose_label"
 			unitLabel="@Strings.text_milli_roentgen" />
+
+	<fitField id="5" 
+			sortOrder="1" 
+			precision="0"
+			dataLabel="@Strings.field_session_battery"
+			unitLabel="@Strings.text_percents"
+			fillColor="#cc7722" />
 			
 </fitContributions>

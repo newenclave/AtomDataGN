@@ -8,11 +8,13 @@ class AtomFitContribution {
     const FIELD_SESSION_DOSE = 2;
     const FIELD_DOSE_POWER_ROENTGEN = 3;
     const FIELD_SESSION_DOSE_ROENTGEN = 4;
+    const FIELD_CHARGE = 5;
 
     private var _doseRate;
     private var _temperature;
     private var _sessionDoze;
     private var _useR;
+    private var _charge;
 
     function initialize(activity) {
         self._useR = App.getApp().isRoentgen();
@@ -49,6 +51,12 @@ class AtomFitContribution {
                 :units => "celsius"
             });
 
+        self._charge = activity.createField("charge",
+            FIELD_CHARGE,
+            Fit.DATA_TYPE_SINT8, {
+                :units => "percents"
+            });
+
     }
 
     function update(data) {
@@ -60,5 +68,7 @@ class AtomFitContribution {
             self._sessionDoze.setData(data.get(:sessionDoze));
         }
         self._temperature.setData(data.get(:temperature));
+        self._charge.setData(data.get(:charge));
+
     }
 }

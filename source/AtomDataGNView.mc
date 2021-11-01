@@ -31,17 +31,20 @@ class AtomDataGNView extends WatchUi.SimpleDataField {
         var prefix = "";
         var postfix = "";
         var d = App.getApp().getDoseRate();
+        var dos = d;
 
-        if(ready) {
-            self._fitContibution.update({
-                :doseRate => d,
-                :temperature => App.getApp().getTemperature(),
-                :sessionDoze => App.getApp().getSessionDoseAccumulated()
-            });
-        } else {
+        if(!ready) {
             prefix = "(";
             postfix = ")";
+            dos = -0.0001;
         }
+
+        self._fitContibution.update({
+            :doseRate => dos,
+            :temperature => App.getApp().getTemperature(),
+            :sessionDoze => App.getApp().getSessionDoseAccumulated(),
+            :charge => App.getApp().getCharge()
+        });
 
         if(self._useR) {
             result = prefix + (d * 100.0).format("%.2f") + postfix;

@@ -16,5 +16,6 @@
     <string id="text_micro_fahrenheit">°F</string>
 
     <string id="maximum_time_to_connect">Maximum time to search</string>
-
+	<string id="text_percents">Percents</string>
+	
 </strings>

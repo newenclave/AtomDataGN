@@ -10,6 +10,7 @@ class DataController extends Ble.BleDelegate {
     private var _temperature = 0.0;
     private var _doseStart = -1;
     private var _doseAccumulated = 0.0;
+    private var _charge = 0.0;
 
     function initialize() {
         BleDelegate.initialize();
@@ -43,6 +44,10 @@ class DataController extends Ble.BleDelegate {
 
     function getTemperature() {
         return self._temperature;
+    }
+
+    function getCharge() {
+        return self._charge;
     }
 
     function isReady() {
@@ -105,6 +110,7 @@ class DataController extends Ble.BleDelegate {
             self._doseRate = value.decodeNumber(Lang.NUMBER_FORMAT_FLOAT,
                     { :offset => 5, :endianness => Lang.ENDIAN_LITTLE });
             self._temperature = value[12];
+            self._charge = value[11];
             if(self._doseStart < 0) {
                 self._doseStart = self._doseAccumulated;
             }

@@ -9,4 +9,6 @@
 
     <string id="field_session_dose_label">Session dose</string>
  
+ 	<string id="field_session_battery">Charge level</string>
+ 
 </strings>

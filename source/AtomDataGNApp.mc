@@ -63,6 +63,10 @@ class AtomDataGNApp extends Application.AppBase {
         return self._dataController.getTemperature();
     }
 
+    function getCharge() {
+        return self._dataController.getCharge();
+    }
+
     function getProfile() {
         return self._atomProfile;
     }
