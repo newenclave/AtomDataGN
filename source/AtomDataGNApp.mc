@@ -45,7 +45,10 @@ class AtomDataGNApp extends Application.AppBase {
     }
 
     function getDoseRate() {
-        return self._dataController.getDoseRate();
+        if(null != self._dataController) {
+            return self._dataController.getDoseRate();
+        }
+        return 0.0f;
     }
 
     function getScanResult() {

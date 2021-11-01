@@ -52,13 +52,13 @@ class DataController extends Ble.BleDelegate {
     function startNotification() {
         System.println("startNotification Begin");
         try {
-        var char = self._service.getCharacteristic(App.getApp().getProfile().ATOM_FAST_CHAR);
-        if(char) {
-            var cccd = char.getDescriptor(Ble.cccdUuid());
-            cccd.requestWrite([0x01, 0x00]b);
-        }
+            var char = self._service.getCharacteristic(App.getApp().getProfile().ATOM_FAST_CHAR);
+            if(char) {
+                var cccd = char.getDescriptor(Ble.cccdUuid());
+                cccd.requestWrite([0x01, 0x00]b);
+            }
         } catch(e) {
-        System.println("startNotification ex " + e.getErrorMessage());
+            System.println("startNotification ex " + e.getErrorMessage());
         }
         System.println("startNotification End");
     }
@@ -69,6 +69,8 @@ class DataController extends Ble.BleDelegate {
         }
         if(!self._device.isConnected()) {
             App.getApp().onConnectChanged(false);
+            System.println("Ready = false");
+            self._ready = false;
             return;
         }
         self._service = self._device.getService(App.getApp().getProfile().ATOM_FAST_SERVICE);
@@ -81,6 +83,7 @@ class DataController extends Ble.BleDelegate {
 
     function onDescriptorWrite(descriptor, status) {
         if(Ble.cccdUuid().equals(descriptor.getUuid())) {
+            System.println("Ready = true");
             self._ready = true;
         }
     }
